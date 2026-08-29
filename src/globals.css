@@ -193,7 +193,7 @@ button { cursor: pointer; }
 .section-intro > div > p:last-child { margin: 0; color: var(--ink-muted); font-size: 12px; }
 .status-pill, .date-pill { flex: 0 0 auto; gap: 6px; padding: 9px 12px; border: 1px solid var(--line); border-radius: 999px; color: var(--navy); background: var(--surface); font-size: 10px; font-weight: 750; }
 .goal-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
-.care-goal-card { position: relative; overflow: hidden; }
+.care-goal-card { position: relative; display: flex; flex-direction: column; overflow: hidden; }
 .care-goal-card::before { content: ""; position: absolute; inset: 0 auto 0 0; width: 4px; background: var(--goal-color); }
 .goal-number { position: absolute; right: 18px; top: 11px; color: #f0f0eb; font-family: Georgia, "Times New Roman", serif; font-size: 58px; line-height: 1; }
 .goal-card-heading { position: relative; z-index: 1; justify-content: space-between; }
@@ -202,7 +202,9 @@ button { cursor: pointer; }
 .more-button { width: 34px; height: 34px; border: 0; background: transparent; }
 .care-goal-card h3 { margin: 24px 0 9px; font-family: Georgia, "Times New Roman", serif; font-size: 21px; font-weight: 500; }
 .care-goal-card > p { min-height: 48px; margin: 0; color: var(--ink-muted); font-size: 10px; line-height: 1.6; }
-.goal-metric { display: flex; align-items: baseline; justify-content: space-between; margin: 24px 0 9px; }
+/* Push the metric → progress bar → button group to a shared baseline at the
+   bottom of every equal-height comparison card, whatever the title length. */
+.goal-metric { display: flex; align-items: baseline; justify-content: space-between; margin: 0 0 9px; margin-top: auto; padding-top: 24px; }
 .goal-metric strong { font-family: Georgia, "Times New Roman", serif; font-size: 24px; font-weight: 500; }
 .goal-metric span { color: #4d7558; font-size: 9px; font-weight: 700; }
 .care-progress { background: color-mix(in srgb, var(--goal-color) 18%, white) !important; }

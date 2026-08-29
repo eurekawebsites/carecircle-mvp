@@ -99,8 +99,9 @@ button { cursor: pointer; }
 .child-mini-name { margin-top: 3px !important; font-size: 13px; font-weight: 700; }
 .eyebrow { margin: 0; color: var(--ink-muted); font-size: 10px; line-height: 1.2; font-weight: 800; text-transform: uppercase; letter-spacing: .13em; }
 .main-nav { width: 100% !important; height: auto !important; display: flex !important; flex: 0 0 auto; flex-direction: column; align-items: stretch !important; gap: 5px; padding: 0 !important; background: transparent !important; }
-.nav-item { width: 100% !important; min-height: 46px; flex: none !important; justify-content: flex-start !important; gap: 12px !important; padding: 0 13px !important; border: 0 !important; border-radius: 13px !important; color: var(--ink-muted) !important; font-size: 13px !important; font-weight: 650 !important; }
-.nav-item svg { width: 18px !important; height: 18px !important; }
+.nav-item { width: 100% !important; min-height: 46px; display: flex !important; align-items: center !important; justify-content: flex-start !important; flex: none !important; gap: 12px !important; padding: 0 13px !important; border: 0 !important; border-radius: 13px !important; color: var(--ink-muted) !important; background: transparent; font-size: 13px !important; font-weight: 650 !important; text-align: left !important; }
+.nav-item svg { width: 18px !important; height: 18px !important; flex: 0 0 auto; }
+.nav-item span { display: block; min-width: 0; }
 .nav-item[data-state="active"] { color: var(--navy) !important; background: var(--sage-soft) !important; box-shadow: none !important; }
 .nav-item[data-state="active"]::after { display: none; }
 .privacy-note { display: flex; flex: 0 0 auto; gap: 10px; min-height: 82px; margin-top: auto; padding: 14px; border-radius: 15px; color: var(--navy); background: #f1f4ef; }
@@ -278,8 +279,10 @@ button { cursor: pointer; }
 }
 
 @media (max-width: 720px) {
-  body { padding-bottom: calc(64px + max(8px, env(safe-area-inset-bottom))); }
-  .app-shell { display: block !important; }
+  /* Bottom-nav clearance belongs on the app shell, not on body — the role
+     picker renders without the shell and must not inherit that padding. */
+  body { padding-bottom: 0; }
+  .app-shell { display: block !important; padding-bottom: calc(64px + max(8px, env(safe-area-inset-bottom))); }
   .app-sidebar { display: none !important; }
 
   /* Five equal-width controls that span the viewport with no horizontal scroll. */
@@ -341,8 +344,10 @@ button { cursor: pointer; }
   .daily-copy { width: 100%; max-width: 100%; }
   .daily-card h2 { max-width: 100%; font-size: 31px; }
   .daily-card p { max-width: 100%; }
-  .completion-ring { position: static; margin: 22px 0 0 auto; width: 104px; height: 104px; }
-  .completion-ring strong { font-size: 24px; }
+  /* Full ring, centred beneath the copy with equal clearance. Keep position
+     relative so the ::before mask stays sized to the ring, not the viewport. */
+  .completion-ring { position: relative; z-index: 1; margin: 24px auto 0; width: 116px; height: 116px; }
+  .completion-ring strong { font-size: 25px; }
   .circle-people { margin-top: 18px; }
   .people-label { max-width: 90px; }
   .week-card { min-height: 230px; }
@@ -395,7 +400,7 @@ button { cursor: pointer; }
 .top-role-button strong { margin-top: 2px; font-size: 10px; }
 .top-role-button > svg { width: 14px; color: var(--ink-muted); }
 
-.demo-gate { min-height: 100vh; display: grid; place-items: center; padding: 36px 20px; background: radial-gradient(circle at 18% 18%, rgba(124,164,179,.32), transparent 33%), radial-gradient(circle at 85% 78%, rgba(119,157,130,.28), transparent 34%), linear-gradient(135deg, #dce9ed, #f5f3ed 48%, #e4efe5); }
+.demo-gate { min-height: 100vh; min-height: 100dvh; display: grid; place-items: center; padding: 36px 20px; background: radial-gradient(circle at 18% 18%, rgba(124,164,179,.32), transparent 33%), radial-gradient(circle at 85% 78%, rgba(119,157,130,.28), transparent 34%), linear-gradient(135deg, #dce9ed, #f5f3ed 48%, #e4efe5); }
 .demo-gate-card { width: min(620px, 100%); padding: 42px; border: 1px solid rgba(255,255,255,.8); border-radius: 28px; background: rgba(255,255,255,.92); box-shadow: 0 32px 80px rgba(35,67,82,.16); text-align: center; }
 .gate-brand-mark { width: 56px; height: 56px; display: grid; place-items: center; margin: 0 auto 18px; border-radius: 18px; color: white; background: var(--navy); box-shadow: 0 14px 26px rgba(35,67,82,.2); }
 .gate-brand-mark svg { width: 30px; }
@@ -512,7 +517,8 @@ button { cursor: pointer; }
 .community-feed { display: grid; gap: 11px; }
 .community-post { padding: 23px; }
 .community-post-header { display: grid; grid-template-columns: 44px 1fr auto; align-items: center; gap: 11px; }
-.community-post-header strong, .community-post-header span:not(.community-category) { display: block; }
+.community-post-header > div > strong, .community-post-header > div > span { display: block; }
+.community-post-header > .member-avatar { display: grid; place-items: center; align-self: center; line-height: 1; }
 .community-post-header strong { font-size: 11px; }
 .community-post-header div > span { margin-top: 3px; color: var(--ink-muted); font-size: 8px; }
 .community-category { display: inline-flex; align-items: center; gap: 4px; padding: 6px 8px; border-radius: 999px; color: var(--navy); background: var(--blue-soft); font-size: 8px; font-weight: 800; }

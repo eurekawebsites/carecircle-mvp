@@ -23,9 +23,10 @@ The demo includes a role switcher to validate both perspectives. Production auth
 4. Active interventions that tell caregivers exactly what approach to follow.
 5. Progress dashboard showing trends, meaningful wins, and goal-level progress.
 6. Caregiver update feed for observations and handoff notes.
-7. Responsive web interface designed primarily for phones.
-8. Installable PWA in the production phase.
-9. Small attribution: “Powered by Eureka Websites.”
+7. CareCircle Community Network for registered members to share questions, tips, resources, and milestones, with replies, supportive reactions, reporting, and basic moderation.
+8. Responsive web interface designed primarily for phones.
+9. Installable PWA in the production phase.
+10. Small linked attribution with the approved Eureka bird: “POWERED BY EUREKA TECH”.
 
 ## Demo acceptance flow
 
@@ -38,6 +39,7 @@ The client should be able to:
 5. Log a successful goal occurrence and see its progress change.
 6. Review progress over time.
 7. Publish a caregiver update and see it appear in the shared feed.
+8. Open the Community, filter posts, publish a post, view replies, react supportively, and report a post for review.
 
 ## Production phase after approval
 
@@ -53,7 +55,8 @@ The client should be able to:
 ## Explicitly excluded from the $1,200 MVP
 
 - Native iOS or Android applications or app-store submission.
-- Open/public social network or community feed.
+- A full or public social network beyond the focused CareCircle Community Network.
+- Friends/followers, public profiles, private messaging, group chat, custom groups, live video, algorithmic feeds, professional directories, or advanced moderation tooling.
 - Medical diagnosis, treatment recommendations, clinical records, or emergency services.
 - Professional-provider portal, telehealth, insurance, or billing.
 - Real-time chat, video calls, location tracking, or pickup verification.

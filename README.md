@@ -1,6 +1,6 @@
 # CareCircle — MVP Demo
 
-A controlled, single-screen demo of **CareCircle**: one private place for parents and
+A controlled, multi-role demo of **CareCircle**: one private place for parents and
 trusted caregivers to coordinate a child's daily care, follow the same interventions,
 and see progress over time.
 
@@ -34,18 +34,24 @@ delivered production build:
 - Loading, empty, error, validation, and success states
 - Responsive / device QA and production deployment
 
-No backend, authentication, database, or community feature is included in this
-repository, and none should be added to it — this repo is the demo only.
+No backend, authentication, or database is included in this repository, and none
+should be added to it — this repo is the demo only. The CareCircle Community
+Network is present as an in-memory demo (registered-member feed, questions/tips/
+resources/milestones, replies, supportive reactions, and reporting/basic
+moderation); it is intentionally *not* a full social network and is not expanded
+here.
 
 ## Demo walkthrough
 
-1. Switch between the **parent** and **caregiver** view (top-right selector).
-2. See what care is already done today and by whom, on **Today**.
-3. Complete an outstanding care item and watch the daily completion update.
-4. Open **Care plan** to review the care goals and the active intervention.
-5. Use **Log a success** on a goal and see its progress move.
-6. Open **Progress** to review the trend over time.
-7. Open **Updates**, post a caregiver update, and see it appear in the feed.
+1. Choose **Parent** or **Caregiver** from the demo entry screen.
+2. Use the role-specific sidebar to move through every workflow.
+3. See what care is already done today and by whom, then complete an item.
+4. Review measurable care goals and the active intervention.
+5. In Caregiver view, create a structured progress entry.
+6. In Parent view, review care-circle members and permission boundaries.
+7. Review progress over time and post a caregiver handoff update.
+8. Open **Community**, filter posts, publish one, view replies, react supportively,
+   and report a post for review.
 
 ---
 
@@ -81,4 +87,4 @@ repository or Pages path changes, update `base` to match.
 
 ---
 
-Powered by Eureka Websites.
+POWERED BY EUREKA TECH

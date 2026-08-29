@@ -76,10 +76,14 @@
 }
 
 * { box-sizing: border-box; }
+html, body, #root { max-width: 100%; overflow-x: hidden; }
 html { background: var(--canvas); }
 body { margin: 0; background: var(--canvas); color: var(--ink); font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
 button, input, textarea, select { font: inherit; }
 button { cursor: pointer; }
+
+/* Mobile bottom navigation — hidden on desktop, where the sidebar is used instead. */
+.mobile-nav, .more-menu-overlay { display: none; }
 
 .app-shell { min-height: 100vh; display: grid !important; grid-template-columns: 268px minmax(0, 1fr); gap: 0 !important; }
 .app-sidebar { position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; overflow-y: auto; padding: 30px 20px 24px; background: #fcfcf9; border-right: 1px solid var(--line); z-index: 20; }
@@ -274,13 +278,57 @@ button { cursor: pointer; }
 }
 
 @media (max-width: 720px) {
-  body { padding-bottom: 74px; }
+  body { padding-bottom: calc(64px + max(8px, env(safe-area-inset-bottom))); }
   .app-shell { display: block !important; }
-  .app-sidebar { position: fixed; inset: auto 0 0; width: 100%; height: 72px; padding: 8px 10px max(8px, env(safe-area-inset-bottom)); border: 0; border-top: 1px solid var(--line); box-shadow: 0 -10px 30px rgba(35,67,82,.07); }
-  .brand-row, .child-mini-card, .privacy-note, .powered { display: none; }
-  .main-nav { height: 100% !important; flex-direction: row; align-items: center !important; gap: 3px; }
-  .nav-item { min-width: 0 !important; min-height: 54px; flex: 1 !important; flex-direction: column; justify-content: center !important; gap: 3px !important; padding: 4px !important; border-radius: 12px !important; font-size: 9px !important; }
-  .nav-item svg { width: 18px !important; }
+  .app-sidebar { display: none !important; }
+
+  /* Five equal-width controls that span the viewport with no horizontal scroll. */
+  .mobile-nav {
+    display: flex; position: fixed; inset: auto 0 0; z-index: 40;
+    width: 100%; max-width: 100%;
+    padding: 6px 4px max(6px, env(safe-area-inset-bottom));
+    background: #fcfcf9; border-top: 1px solid var(--line);
+    box-shadow: 0 -10px 30px rgba(35,67,82,.07);
+  }
+  .mobile-nav-item {
+    flex: 1 1 0; min-width: 0; min-height: 52px;
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px;
+    padding: 4px 2px; border: 0; border-radius: 12px;
+    color: var(--ink-muted); background: transparent;
+    font-size: 9px; font-weight: 650; line-height: 1.1;
+  }
+  .mobile-nav-item svg { width: 18px; height: 18px; }
+  .mobile-nav-item span {
+    max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  }
+  .mobile-nav-item.is-active { color: var(--navy); background: var(--sage-soft); }
+
+  /* Compact menu that opens above the bottom bar. */
+  .more-menu-overlay {
+    display: block; position: fixed; inset: 0; z-index: 45;
+    background: rgba(29,42,45,.28);
+  }
+  .more-menu {
+    position: fixed; left: 10px; right: 10px;
+    bottom: calc(64px + max(6px, env(safe-area-inset-bottom)) + 10px);
+    max-height: calc(100vh - 64px - 40px); overflow-y: auto;
+    display: grid; gap: 2px;
+    padding: 10px; border: 1px solid var(--line); border-radius: 18px;
+    background: var(--surface); box-shadow: 0 18px 44px rgba(35,67,82,.22);
+  }
+  .more-menu-head { display: flex; align-items: center; justify-content: space-between; padding: 4px 8px 8px; }
+  .more-menu-head strong { font-size: 11px; text-transform: uppercase; letter-spacing: .1em; color: var(--ink-muted); }
+  .more-menu-close { width: 30px; height: 30px; display: grid; place-items: center; border: 0; border-radius: 10px; color: var(--ink-muted); background: var(--surface-soft); }
+  .more-menu-close svg { width: 15px; }
+  .more-menu-item {
+    display: flex; align-items: center; gap: 12px;
+    min-height: 46px; padding: 0 12px; border: 0; border-radius: 12px;
+    color: var(--ink); background: transparent; font-size: 13px; font-weight: 650; text-align: left;
+  }
+  .more-menu-item svg { width: 18px; height: 18px; color: var(--ink-muted); }
+  .more-menu-item.is-active { color: var(--navy); background: var(--sage-soft); }
+  .more-menu-item.is-active svg { color: var(--navy); }
+
   .topbar { min-height: 78px; padding: 14px 18px; }
   .topbar h1 { font-size: 21px; }
   .topbar .eyebrow, .viewer-switcher label span, .icon-button { display: none; }
@@ -288,10 +336,12 @@ button { cursor: pointer; }
   .viewer-switcher select { width: 120px; font-size: 10px; }
   .page-content { padding: 20px 15px 35px; }
   .today-grid { gap: 12px; }
-  .daily-card { min-height: 265px; align-items: flex-start; padding: 27px 24px; }
-  .daily-card h2 { max-width: 270px; font-size: 31px; }
-  .daily-card p { max-width: 250px; }
-  .completion-ring { position: absolute; right: 20px; bottom: 18px; width: 104px; height: 104px; }
+  /* Stack the hero so the ring never covers the copy on small screens. */
+  .daily-card { display: block; min-height: 0; padding: 27px 24px; }
+  .daily-copy { width: 100%; max-width: 100%; }
+  .daily-card h2 { max-width: 100%; font-size: 31px; }
+  .daily-card p { max-width: 100%; }
+  .completion-ring { position: static; margin: 22px 0 0 auto; width: 104px; height: 104px; }
   .completion-ring strong { font-size: 24px; }
   .circle-people { margin-top: 18px; }
   .people-label { max-width: 90px; }
@@ -504,12 +554,6 @@ button { cursor: pointer; }
 }
 
 @media (max-width: 720px) {
-  body { padding-bottom: 78px; }
-  .app-sidebar { height: 76px; overflow: hidden; }
-  .brand-row, .child-mini-card, .role-context, .sidebar-footer { display: none; }
-  .main-nav { overflow-x: auto; overflow-y: hidden; justify-content: flex-start; scrollbar-width: none; }
-  .main-nav::-webkit-scrollbar { display: none; }
-  .nav-item { min-width: 76px !important; flex: 0 0 76px !important; }
   .topbar-actions { gap: 7px; }
   .top-role-button { min-width: 0; grid-template-columns: 30px 16px; padding: 5px 7px; }
   .top-role-button > span:nth-child(2) { display: none; }

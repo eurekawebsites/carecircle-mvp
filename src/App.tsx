@@ -1,9 +1,10 @@
-import { type FormEvent, useMemo, useState } from "react"
+import { type FormEvent, useEffect, useMemo, useState } from "react"
 import {
   ArrowLeftRight, ArrowUpRight, Bell, CalendarDays, Check, CheckCircle2,
   ChevronRight, CircleHelp, ClipboardCheck, Clock3, Flag, Goal, Heart,
   HeartHandshake, Home, Lightbulb, ListChecks, LockKeyhole, MessageCircle,
-  Megaphone, Plus, ShieldCheck, Sparkles, TrendingUp, UserRoundCog, Users,
+  Megaphone, MoreHorizontal, Plus, ShieldCheck, Sparkles, TrendingUp,
+  UserRoundCog, Users, X,
 } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
@@ -48,24 +49,28 @@ const roleDetails = {
   caregiver: { name: "Casey", initials: "CG", label: "Caregiver", description: "Complete daily care, follow strategies, and share handoffs.", color: "peach" },
 } as const
 
-const parentNav = [
-  { value: "overview" as Page, label: "Overview", icon: Home },
-  { value: "today" as Page, label: "Today’s care", icon: ListChecks },
-  { value: "care" as Page, label: "Care plan", icon: ClipboardCheck },
-  { value: "progress" as Page, label: "Progress", icon: TrendingUp },
-  { value: "circle" as Page, label: "Care circle", icon: Users },
-  { value: "updates" as Page, label: "Updates", icon: MessageCircle },
-  { value: "community" as Page, label: "Community", icon: HeartHandshake },
-]
+type NavItem = { value: Page; label: string; icon: typeof Home }
 
-const caregiverNav = [
-  { value: "today" as Page, label: "Today’s care", icon: ListChecks },
-  { value: "care" as Page, label: "Care plan", icon: ClipboardCheck },
-  { value: "log" as Page, label: "Log progress", icon: CheckCircle2 },
-  { value: "progress" as Page, label: "Progress", icon: TrendingUp },
-  { value: "updates" as Page, label: "Updates", icon: MessageCircle },
-  { value: "community" as Page, label: "Community", icon: HeartHandshake },
-]
+const NAV: Record<Page, NavItem> = {
+  overview: { value: "overview", label: "Overview", icon: Home },
+  today: { value: "today", label: "Today’s care", icon: ListChecks },
+  care: { value: "care", label: "Care plan", icon: ClipboardCheck },
+  log: { value: "log", label: "Log progress", icon: CheckCircle2 },
+  progress: { value: "progress", label: "Progress", icon: TrendingUp },
+  circle: { value: "circle", label: "Care circle", icon: Users },
+  updates: { value: "updates", label: "Updates", icon: MessageCircle },
+  community: { value: "community", label: "Community", icon: HeartHandshake },
+}
+
+// Full ordered navigation — used unchanged by the desktop sidebar.
+const parentNav: NavItem[] = [NAV.overview, NAV.today, NAV.care, NAV.progress, NAV.circle, NAV.updates, NAV.community]
+const caregiverNav: NavItem[] = [NAV.today, NAV.care, NAV.log, NAV.progress, NAV.updates, NAV.community]
+
+// Mobile bottom bar: four primary controls + a fifth "More" control.
+const parentPrimary: Page[] = ["overview", "today", "care", "progress"]
+const parentMore: Page[] = ["circle", "updates", "community"]
+const caregiverPrimary: Page[] = ["today", "care", "log", "progress"]
+const caregiverMore: Page[] = ["updates", "community"]
 
 function PoweredBy() {
   return (
@@ -123,15 +128,30 @@ export default function App() {
   const [supportedPosts, setSupportedPosts] = useState<number[]>([])
   const [openReplies, setOpenReplies] = useState<number[]>([])
   const [reportedPosts, setReportedPosts] = useState<number[]>([])
+  const [moreOpen, setMoreOpen] = useState(false)
 
   const completed = tasks.filter((task) => task.done).length
   const completion = Math.round((completed / tasks.length) * 100)
   const details = role ? roleDetails[role] : roleDetails.parent
   const navItems = role === "caregiver" ? caregiverNav : parentNav
+  const primaryPages = role === "caregiver" ? caregiverPrimary : parentPrimary
+  const morePages = role === "caregiver" ? caregiverMore : parentMore
+  const moreActive = morePages.includes(activePage)
   const goals = useMemo(() => careGoals.map((goal) => ({ ...goal, progress: Math.min(100, goal.progress + (goalBumps[goal.id] ?? 0)) })), [goalBumps])
 
+  // One shared navigation entry point for every in-app section change.
+  function navigate(page: Page) {
+    setMoreOpen(false)
+    // Re-tapping the active tab won't re-fire the effect below, so scroll here too.
+    if (page === activePage) window.scrollTo({ top: 0, left: 0, behavior: "auto" })
+    setActivePage(page)
+  }
+
+  // Reset scroll to the top on any section change or role switch.
+  useEffect(() => { window.scrollTo({ top: 0, left: 0, behavior: "auto" }) }, [activePage, role])
+
   function chooseRole(nextRole: Role) { setRole(nextRole); setActivePage(nextRole === "parent" ? "overview" : "today") }
-  function switchRole() { setRole(null); setInviteOpen(false) }
+  function switchRole() { setRole(null); setInviteOpen(false); setMoreOpen(false) }
   function toggleTask(id: number, checked: boolean) { setTasks((current) => current.map((task) => task.id === id ? { ...task, done: checked, completedBy: checked ? details.name : undefined } : task)) }
   function bumpGoal(id: number, amount = 4) { setGoalBumps((current) => ({ ...current, [id]: (current[id] ?? 0) + amount })) }
 
@@ -177,7 +197,7 @@ export default function App() {
         <div className="child-mini-card"><span className="child-avatar">E</span><div><p className="eyebrow">Care space</p><p className="child-mini-name">Elio’s circle</p></div><span className="demo-mini-badge">Demo</span></div>
         <div className="role-context"><span className={`mini-avatar ${details.color}`}>{details.initials}</span><div><small>Viewing as</small><strong>{details.label}</strong></div></div>
         <nav className="main-nav" aria-label="CareCircle sections">
-          {navItems.map((item) => { const Icon = item.icon; return <button key={item.value} className={`nav-item ${activePage === item.value ? "is-active" : ""}`} onClick={() => setActivePage(item.value)}><Icon /><span>{item.label}</span></button> })}
+          {navItems.map((item) => { const Icon = item.icon; return <button key={item.value} className={`nav-item ${activePage === item.value ? "is-active" : ""}`} onClick={() => navigate(item.value)}><Icon /><span>{item.label}</span></button> })}
         </nav>
         <div className="sidebar-footer">
           <button className="switch-role-button" onClick={switchRole}><ArrowLeftRight /> Switch role</button>
@@ -192,15 +212,29 @@ export default function App() {
           <div className="topbar-actions"><span className="sample-data-label">Demo · Sample data</span><button className="icon-button" aria-label="Notifications"><Bell /><span className="notification-dot" /></button><button className="top-role-button" aria-label={`Switch role. Viewing as ${details.name} · ${details.label}`} onClick={switchRole}><span className={`mini-avatar ${details.color}`}>{details.initials}</span><span><small>Viewing as</small><strong>{details.name} · {details.label}</strong></span><ArrowLeftRight /></button></div>
         </header>
 
-        {activePage === "overview" && <OverviewPage completed={completed} completion={completion} tasks={tasks} toggleTask={toggleTask} setActivePage={setActivePage} />}
-        {activePage === "today" && <TodayPage completed={completed} tasks={tasks} toggleTask={toggleTask} setActivePage={setActivePage} />}
-        {activePage === "care" && <CarePlanPage role={role} goals={goals} bumpGoal={bumpGoal} setActivePage={setActivePage} />}
+        {activePage === "overview" && <OverviewPage completed={completed} completion={completion} tasks={tasks} toggleTask={toggleTask} setActivePage={navigate} />}
+        {activePage === "today" && <TodayPage completed={completed} tasks={tasks} toggleTask={toggleTask} setActivePage={navigate} />}
+        {activePage === "care" && <CarePlanPage role={role} goals={goals} bumpGoal={bumpGoal} setActivePage={navigate} />}
         {activePage === "log" && <LogProgressPage details={details} logGoal={logGoal} setLogGoal={setLogGoal} logOutcome={logOutcome} setLogOutcome={setLogOutcome} logNote={logNote} setLogNote={setLogNote} logSaved={logSaved} setLogSaved={setLogSaved} saveProgress={saveProgress} />}
         {activePage === "progress" && <ProgressPage goals={goals} />}
         {activePage === "circle" && <CirclePage inviteOpen={inviteOpen} setInviteOpen={setInviteOpen} />}
-        {activePage === "updates" && <UpdatesPage role={role} details={details} note={note} setNote={setNote} addUpdate={addUpdate} updates={updates} setActivePage={setActivePage} />}
+        {activePage === "updates" && <UpdatesPage role={role} details={details} note={note} setNote={setNote} addUpdate={addUpdate} updates={updates} setActivePage={navigate} />}
         {activePage === "community" && <CommunityPage details={details} posts={communityPosts} draft={communityDraft} setDraft={setCommunityDraft} category={communityCategory} setCategory={setCommunityCategory} filter={communityFilter} setFilter={setCommunityFilter} supportedPosts={supportedPosts} toggleSupport={toggleSupport} openReplies={openReplies} toggleReplies={toggleReplies} reportedPosts={reportedPosts} reportPost={(id) => setReportedPosts((current) => current.includes(id) ? current : [...current, id])} addPost={addCommunityPost} />}
       </main>
+
+      {moreOpen && (
+        <div className="more-menu-overlay" onClick={() => setMoreOpen(false)}>
+          <div className="more-menu" role="menu" aria-label="More sections" onClick={(event) => event.stopPropagation()}>
+            <div className="more-menu-head"><strong>More</strong><button className="more-menu-close" aria-label="Close menu" onClick={() => setMoreOpen(false)}><X /></button></div>
+            {morePages.map((page) => { const item = NAV[page]; const Icon = item.icon; return <button key={page} role="menuitem" className={`more-menu-item ${activePage === page ? "is-active" : ""}`} onClick={() => navigate(page)}><Icon /><span>{item.label}</span></button> })}
+          </div>
+        </div>
+      )}
+
+      <nav className="mobile-nav" aria-label="CareCircle sections">
+        {primaryPages.map((page) => { const item = NAV[page]; const Icon = item.icon; return <button key={page} className={`mobile-nav-item ${activePage === page ? "is-active" : ""}`} onClick={() => navigate(page)}><Icon /><span>{item.label}</span></button> })}
+        <button className={`mobile-nav-item ${moreActive || moreOpen ? "is-active" : ""}`} aria-haspopup="menu" aria-expanded={moreOpen} onClick={() => setMoreOpen((open) => !open)}><MoreHorizontal /><span>More</span></button>
+      </nav>
     </div>
   )
 }

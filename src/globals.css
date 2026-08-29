@@ -86,8 +86,13 @@ button { cursor: pointer; }
 .mobile-nav, .more-menu-overlay { display: none; }
 
 .app-shell { min-height: 100vh; display: grid !important; grid-template-columns: 268px minmax(0, 1fr); gap: 0 !important; }
-.app-sidebar { position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; overflow-y: auto; scrollbar-width: none; -ms-overflow-style: none; padding: 30px 20px 24px; background: #fcfcf9; border-right: 1px solid var(--line); z-index: 20; }
-.app-sidebar::-webkit-scrollbar { width: 0; height: 0; display: none; }
+/* The sidebar fills the real viewport (dvh) and does NOT scroll as a whole.
+   Its top blocks stay put; only .main-nav scrolls when the window is short,
+   so the footer (Switch role / Private care circle / Eureka) is always seen. */
+.app-sidebar { position: sticky; top: 0; height: 100vh; height: 100dvh; display: flex; flex-direction: column; overflow: hidden; padding: 30px 20px 24px; background: #fcfcf9; border-right: 1px solid var(--line); z-index: 20; }
+.app-sidebar > .brand-row, .app-sidebar > .child-mini-card, .app-sidebar > .role-context, .sidebar-footer { flex: 0 0 auto; }
+.main-nav { min-height: 0; overflow-y: auto; scrollbar-width: none; -ms-overflow-style: none; }
+.main-nav::-webkit-scrollbar { width: 0; height: 0; display: none; }
 .brand-row, .child-mini-card, .circle-people, .topbar-actions, .viewer-switcher, .card-title-row, .panel-heading, .progress-label, .goal-card-heading, .member-stack, .circle-member, .update-meta, .status-pill, .date-pill, .pill, .trend-badge, .completed-by { display: flex; align-items: center; }
 .brand-row { gap: 12px; padding: 0 8px; }
 .brand-mark { width: 42px; height: 42px; display: grid; place-items: center; border-radius: 14px; color: white; background: var(--navy); box-shadow: 0 8px 20px rgba(35, 67, 82, .16); }
@@ -99,7 +104,7 @@ button { cursor: pointer; }
 .child-mini-card p { margin: 0; }
 .child-mini-name { margin-top: 3px !important; font-size: 13px; font-weight: 700; }
 .eyebrow { margin: 0; color: var(--ink-muted); font-size: 10px; line-height: 1.2; font-weight: 800; text-transform: uppercase; letter-spacing: .13em; }
-.main-nav { width: 100% !important; height: auto !important; display: flex !important; flex: 0 0 auto; flex-direction: column; align-items: stretch !important; gap: 5px; padding: 0 !important; background: transparent !important; }
+.main-nav { width: 100% !important; height: auto !important; display: flex !important; flex: 1 1 auto; flex-direction: column; align-items: stretch !important; gap: 5px; padding: 0 !important; background: transparent !important; }
 .nav-item { width: 100% !important; min-height: 46px; display: flex !important; align-items: center !important; justify-content: flex-start !important; flex: none !important; gap: 12px !important; padding: 0 13px !important; border: 0 !important; border-radius: 13px !important; color: var(--ink-muted) !important; background: transparent; font-size: 13px !important; font-weight: 650 !important; text-align: left !important; }
 .nav-item svg { width: 18px !important; height: 18px !important; flex: 0 0 auto; }
 .nav-item span { display: block; min-width: 0; }

@@ -102,15 +102,16 @@
       background: var(--white);
       box-shadow: var(--shadow);
     }
-    .screenshot img { width: 100%; height: 100%; object-fit: cover; }
-    .screenshot.today { inset: 4% 2% 17% 11%; transform: rotate(1.5deg); }
-    .screenshot.activity { right: -1%; bottom: 1%; width: 74%; height: 42%; transform: rotate(-2.5deg); }
+    .screenshot img { width: 100%; height: 100%; object-fit: contain; background: var(--white); }
+    .screenshot.today { top: 12%; right: 2%; left: 4%; height: 46%; transform: rotate(1.5deg); }
+    .screenshot.activity { right: -1%; bottom: 7%; width: 78%; height: 35%; transform: rotate(-2.5deg); }
     .proof-badge { position: absolute; top: 1%; right: 0; z-index: 2; width: 116px; height: 116px; display: grid; place-items: center; border-radius: 50%; background: var(--navy); color: var(--white); font-size: 13px; font-weight: 900; line-height: 1.25; text-align: center; text-transform: uppercase; transform: rotate(7deg); box-shadow: 0 15px 30px rgba(33, 74, 89, .2); }
 
     .trust-strip { margin: 8px auto 74px; display: grid; grid-template-columns: repeat(3, 1fr); overflow: hidden; border: 1px solid var(--line); border-radius: 18px; background: var(--white); box-shadow: 0 12px 35px rgba(24, 48, 57, .06); }
     .trust-item { min-height: 96px; padding: 22px 26px; display: flex; align-items: center; gap: 14px; }
     .trust-item + .trust-item { border-left: 1px solid var(--line); }
-    .trust-icon { flex: 0 0 42px; height: 42px; display: grid; place-items: center; border-radius: 13px; background: var(--sage); color: var(--sage-dark); font-size: 18px; font-weight: 900; }
+    .trust-icon { flex: 0 0 42px; width: 42px; height: 42px; display: grid; place-items: center; border-radius: 13px; background: var(--sage); color: var(--navy); }
+    .trust-icon svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round; shape-rendering: geometricPrecision; }
     .trust-item strong { display: block; line-height: 1.25; }
     .trust-item span { display: block; margin-top: 3px; color: var(--muted); font-size: 14px; line-height: 1.35; }
 
@@ -146,7 +147,7 @@
     .feature-copy li { display: flex; gap: 11px; margin-top: 12px; color: var(--ink); }
     .feature-copy li::before { content: ""; flex: 0 0 9px; width: 9px; height: 9px; margin-top: 9px; border-radius: 50%; background: var(--sage-dark); }
     .feature-shot { overflow: hidden; border: 8px solid var(--cream); border-radius: 22px; background: var(--cream); box-shadow: var(--shadow); }
-    .feature-shot img { width: 100%; aspect-ratio: 16 / 8.3; object-fit: cover; }
+    .feature-shot img { width: 100%; height: auto; object-fit: contain; }
     .feature-shot figcaption { padding: 12px 16px; color: var(--muted); font-size: 13px; line-height: 1.45; }
 
     .review-box { padding: clamp(30px, 5vw, 56px); border-radius: 28px; background: var(--navy); color: var(--white); }
@@ -188,8 +189,8 @@
       .actions { display: grid; }
       .button { width: 100%; }
       .hero-visual { min-height: 350px; }
-      .screenshot.today { inset: 4% 0 16% 1%; }
-      .screenshot.activity { width: 78%; height: 42%; }
+      .screenshot.today { top: 10%; right: 0; left: 1%; height: 46%; }
+      .screenshot.activity { width: 82%; height: 35%; }
       .proof-badge { width: 90px; height: 90px; font-size: 11px; }
       .trust-strip { margin-bottom: 46px; }
       .section { padding: 58px 0; }
@@ -245,9 +246,9 @@
     </section>
 
     <div class="shell trust-strip" aria-label="Verified MVP capabilities">
-      <div class="trust-item"><span class="trust-icon">✓</span><div><strong>Two connected roles</strong><span>Parent and caregiver access</span></div></div>
-      <div class="trust-item"><span class="trust-icon">✉</span><div><strong>Real invitations</strong><span>Email verification and acceptance</span></div></div>
-      <div class="trust-item"><span class="trust-icon">●</span><div><strong>Live coordination</strong><span>Shared updates and notifications</span></div></div>
+      <div class="trust-item"><span class="trust-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg></span><div><strong>Two connected roles</strong><span>Parent and caregiver access</span></div></div>
+      <div class="trust-item"><span class="trust-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/><path d="m8.5 15.5 1.5 1.5 3-3"/></svg></span><div><strong>Real invitations</strong><span>Email verification and acceptance</span></div></div>
+      <div class="trust-item"><span class="trust-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg></span><div><strong>Live coordination</strong><span>Shared updates and notifications</span></div></div>
     </div>
 
     <section class="section alt" id="how-it-works">

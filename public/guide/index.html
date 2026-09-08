@@ -1,0 +1,336 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#214a59" />
+  <meta name="description" content="CareCircle MVP quick review guide for client approval." />
+  <title>CareCircle MVP | Quick Review Guide</title>
+  <style>
+    :root {
+      --ink: #183039;
+      --navy: #214a59;
+      --navy-strong: #e95c46;
+      --sage: #e7f0e7;
+      --sage-dark: #5e8066;
+      --cream: #f7f5f0;
+      --mist: #eef4f4;
+      --line: #d8e0dd;
+      --muted: #607177;
+      --white: #ffffff;
+      --shadow: 0 20px 55px rgba(24, 48, 57, .11);
+      color-scheme: light;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-synthesis: none;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { margin: 0; color: var(--ink); background: var(--cream); font-size: 16px; line-height: 1.65; }
+    img { display: block; max-width: 100%; }
+    a { color: inherit; }
+    button, a { -webkit-tap-highlight-color: transparent; }
+    .shell { width: min(1160px, calc(100% - 40px)); margin: 0 auto; }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      border-bottom: 1px solid rgba(216, 224, 221, .88);
+      background: rgba(247, 245, 240, .9);
+      backdrop-filter: blur(14px);
+    }
+    .topbar-inner { min-height: 72px; display: flex; align-items: center; justify-content: space-between; gap: 24px; }
+    .brand { display: inline-flex; align-items: center; gap: 12px; text-decoration: none; font-weight: 800; letter-spacing: -.02em; }
+    .brand img { width: 42px; height: 42px; border-radius: 12px; box-shadow: 0 8px 20px rgba(33, 74, 89, .13); }
+    .brand span { display: grid; line-height: 1.15; }
+    .brand small { color: var(--muted); font-size: 12px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+    .topnav { display: flex; align-items: center; gap: 22px; }
+    .topnav a { color: var(--muted); font-size: 14px; font-weight: 700; text-decoration: none; }
+    .topnav a:hover { color: var(--navy); }
+
+    .hero { padding: 86px 0 56px; overflow: hidden; }
+    .hero-grid { display: grid; grid-template-columns: 1.04fr .96fr; align-items: center; gap: 64px; }
+    .eyebrow, .pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 32px;
+      margin: 0;
+      padding: 6px 12px;
+      border-radius: 999px;
+      background: var(--sage);
+      color: var(--sage-dark);
+      font-size: 13px;
+      font-weight: 800;
+      line-height: 1.2;
+      letter-spacing: .06em;
+      text-align: center;
+      text-transform: uppercase;
+    }
+    h1, h2, h3 { margin: 0; font-family: Georgia, "Times New Roman", serif; line-height: 1.09; letter-spacing: -.035em; }
+    h1 { max-width: 680px; margin-top: 22px; font-size: clamp(48px, 6.7vw, 76px); }
+    h1 em { color: var(--navy); font-style: normal; }
+    .lead { max-width: 650px; margin: 24px 0 0; color: var(--muted); font-size: 20px; line-height: 1.55; }
+    .actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 32px; }
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 52px;
+      padding: 13px 20px;
+      border: 1px solid var(--navy);
+      border-radius: 14px;
+      background: var(--navy);
+      color: var(--white);
+      font-size: inherit;
+      font-weight: 800;
+      text-decoration: none;
+      transition: transform .18s ease, box-shadow .18s ease;
+    }
+    .button:hover { transform: translateY(-2px); box-shadow: 0 12px 24px rgba(33, 74, 89, .18); }
+    .button.secondary { border-color: var(--line); background: var(--white); color: var(--navy); }
+    .hero-note { margin: 16px 0 0; color: var(--muted); font-size: 14px; }
+
+    .hero-visual { position: relative; min-height: 520px; }
+    .hero-visual::before { content: ""; position: absolute; inset: 3% 8% 10% 0; border-radius: 44% 56% 48% 52%; background: var(--sage); transform: rotate(-6deg); }
+    .screenshot {
+      position: absolute;
+      overflow: hidden;
+      border: 7px solid var(--white);
+      border-radius: 24px;
+      background: var(--white);
+      box-shadow: var(--shadow);
+    }
+    .screenshot img { width: 100%; height: 100%; object-fit: cover; }
+    .screenshot.today { inset: 4% 2% 17% 11%; transform: rotate(1.5deg); }
+    .screenshot.activity { right: -1%; bottom: 1%; width: 74%; height: 42%; transform: rotate(-2.5deg); }
+    .proof-badge { position: absolute; top: 1%; right: 0; z-index: 2; width: 116px; height: 116px; display: grid; place-items: center; border-radius: 50%; background: var(--navy); color: var(--white); font-size: 13px; font-weight: 900; line-height: 1.25; text-align: center; text-transform: uppercase; transform: rotate(7deg); box-shadow: 0 15px 30px rgba(33, 74, 89, .2); }
+
+    .trust-strip { margin: 8px auto 74px; display: grid; grid-template-columns: repeat(3, 1fr); overflow: hidden; border: 1px solid var(--line); border-radius: 18px; background: var(--white); box-shadow: 0 12px 35px rgba(24, 48, 57, .06); }
+    .trust-item { min-height: 96px; padding: 22px 26px; display: flex; align-items: center; gap: 14px; }
+    .trust-item + .trust-item { border-left: 1px solid var(--line); }
+    .trust-icon { flex: 0 0 42px; height: 42px; display: grid; place-items: center; border-radius: 13px; background: var(--sage); color: var(--sage-dark); font-size: 18px; font-weight: 900; }
+    .trust-item strong { display: block; line-height: 1.25; }
+    .trust-item span { display: block; margin-top: 3px; color: var(--muted); font-size: 14px; line-height: 1.35; }
+
+    section { scroll-margin-top: 96px; }
+    .section { padding: 80px 0; }
+    .section.alt { border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); background: var(--white); }
+    .section-heading { max-width: 760px; margin-bottom: 40px; }
+    .section-heading h2 { margin-top: 16px; font-size: clamp(38px, 5vw, 56px); }
+    .section-heading p:last-child { margin: 18px 0 0; color: var(--muted); font-size: 18px; }
+
+    .flow-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+    .flow-card { min-height: 260px; padding: 28px; border: 1px solid var(--line); border-radius: 22px; background: var(--white); box-shadow: 0 12px 30px rgba(24, 48, 57, .05); }
+    .step-number { width: 44px; height: 44px; display: inline-flex; align-items: center; justify-content: center; border-radius: 50%; background: var(--navy); color: var(--white); font-weight: 900; line-height: 1; }
+    .flow-card h3 { margin-top: 26px; font-size: 27px; }
+    .flow-card p { margin: 14px 0 0; color: var(--muted); }
+
+    .role-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
+    .role-card { padding: 30px; border-radius: 24px; background: var(--cream); }
+    .role-card.caregiver { background: var(--mist); }
+    .role-card-header { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+    .role-card h3 { font-size: 32px; }
+    .role-card ul { margin: 24px 0 0; padding: 0; list-style: none; }
+    .role-card li { position: relative; margin-top: 13px; padding-left: 28px; color: var(--muted); }
+    .role-card li::before { content: "✓"; position: absolute; left: 0; top: 0; color: var(--sage-dark); font-weight: 900; }
+
+    .feature-stack { display: grid; gap: 72px; }
+    .feature { display: grid; grid-template-columns: .92fr 1.08fr; align-items: center; gap: 56px; }
+    .feature:nth-child(even) { grid-template-columns: 1.08fr .92fr; }
+    .feature:nth-child(even) .feature-copy { order: 2; }
+    .feature-copy h3 { font-size: clamp(34px, 4vw, 48px); }
+    .feature-copy p { margin: 18px 0 0; color: var(--muted); font-size: 18px; }
+    .feature-copy ul { margin: 22px 0 0; padding: 0; list-style: none; }
+    .feature-copy li { display: flex; gap: 11px; margin-top: 12px; color: var(--ink); }
+    .feature-copy li::before { content: ""; flex: 0 0 9px; width: 9px; height: 9px; margin-top: 9px; border-radius: 50%; background: var(--sage-dark); }
+    .feature-shot { overflow: hidden; border: 8px solid var(--cream); border-radius: 22px; background: var(--cream); box-shadow: var(--shadow); }
+    .feature-shot img { width: 100%; aspect-ratio: 16 / 8.3; object-fit: cover; }
+    .feature-shot figcaption { padding: 12px 16px; color: var(--muted); font-size: 13px; line-height: 1.45; }
+
+    .review-box { padding: clamp(30px, 5vw, 56px); border-radius: 28px; background: var(--navy); color: var(--white); }
+    .review-box .eyebrow { background: rgba(255,255,255,.13); color: var(--white); }
+    .review-box h2 { margin-top: 18px; font-size: clamp(38px, 5vw, 56px); }
+    .review-box > p { max-width: 740px; margin: 18px 0 0; color: rgba(255,255,255,.78); font-size: 18px; }
+    .checklist { margin: 34px 0 0; display: grid; grid-template-columns: 1fr 1fr; gap: 13px 22px; }
+    .check { min-height: 54px; display: flex; align-items: center; gap: 13px; padding: 13px 15px; border-radius: 15px; background: rgba(255,255,255,.09); }
+    .check span { flex: 0 0 28px; width: 28px; height: 28px; display: inline-flex; align-items: center; justify-content: center; border-radius: 50%; background: var(--white); color: var(--navy); font-weight: 900; line-height: 1; }
+    .review-box .actions { margin-top: 30px; }
+    .review-box .button { border-color: var(--white); background: var(--white); color: var(--navy); }
+    .review-box .button.secondary { background: transparent; color: var(--white); }
+
+    footer { padding: 38px 0 46px; color: var(--muted); font-size: 14px; }
+    .footer-inner { display: flex; justify-content: space-between; gap: 20px; border-top: 1px solid var(--line); padding-top: 26px; }
+
+    @media (max-width: 900px) {
+      .topnav a:not(.button-link) { display: none; }
+      .hero { padding-top: 64px; }
+      .hero-grid, .feature, .feature:nth-child(even) { grid-template-columns: 1fr; gap: 38px; }
+      .hero-visual { min-height: 500px; }
+      .feature:nth-child(even) .feature-copy { order: 0; }
+      .flow-grid { grid-template-columns: 1fr; }
+      .flow-card { min-height: 0; }
+      .trust-strip { grid-template-columns: 1fr; }
+      .trust-item + .trust-item { border-top: 1px solid var(--line); border-left: 0; }
+    }
+
+    @media (max-width: 660px) {
+      .shell { width: min(100% - 24px, 1160px); }
+      .topbar-inner { min-height: 64px; }
+      .brand img { width: 38px; height: 38px; }
+      .brand small { display: none; }
+      .topnav { gap: 10px; }
+      .topnav .button-link { font-size: 13px; }
+      .hero { padding: 46px 0 32px; }
+      h1 { font-size: clamp(42px, 13vw, 58px); }
+      .lead { font-size: 18px; }
+      .actions { display: grid; }
+      .button { width: 100%; }
+      .hero-visual { min-height: 350px; }
+      .screenshot.today { inset: 4% 0 16% 1%; }
+      .screenshot.activity { width: 78%; height: 42%; }
+      .proof-badge { width: 90px; height: 90px; font-size: 11px; }
+      .trust-strip { margin-bottom: 46px; }
+      .section { padding: 58px 0; }
+      .section-heading { margin-bottom: 28px; }
+      .role-grid, .checklist { grid-template-columns: 1fr; }
+      .feature-stack { gap: 52px; }
+      .feature { gap: 24px; }
+      .feature-shot { border-width: 5px; }
+      .footer-inner { flex-direction: column; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      .button { transition: none; }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="shell topbar-inner">
+      <a class="brand" href="#top" aria-label="CareCircle quick review guide">
+        <img src="assets/carecircle-logo.png" alt="CareCircle" width="42" height="42" />
+        <span>CareCircle <small>MVP review guide</small></span>
+      </a>
+      <nav class="topnav" aria-label="Guide sections">
+        <a href="#how-it-works">How it works</a>
+        <a href="#roles">Roles</a>
+        <a href="#review">Review checklist</a>
+        <a class="button-link" href="https://carecircle-app-live--client-test-final-z6zu32v7.web.app" target="_blank" rel="noreferrer">Open MVP ↗</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="top">
+    <section class="hero">
+      <div class="shell hero-grid">
+        <div>
+          <p class="eyebrow">Private client review</p>
+          <h1>A clearer way to keep a care circle <em>in step.</em></h1>
+          <p class="lead">CareCircle gives parents and trusted caregivers one private place for daily care, shared strategies, progress, handoffs, and support.</p>
+          <div class="actions">
+            <a class="button" href="https://carecircle-app-live--client-test-final-z6zu32v7.web.app" target="_blank" rel="noreferrer">Open the CareCircle MVP ↗</a>
+            <a class="button secondary" href="CareCircle-MVP-Quick-Review-Guide.pdf">Download PDF guide</a>
+          </div>
+          <p class="hero-note">For review only. Please allow about 10 minutes for the checklist below.</p>
+        </div>
+        <div class="hero-visual" aria-label="CareCircle workspace previews">
+          <div class="proof-badge">Tested<br />end to end</div>
+          <div class="screenshot today"><img src="assets/today.webp" alt="CareCircle Today screen showing daily care tasks" /></div>
+          <div class="screenshot activity"><img src="assets/activity.webp" alt="CareCircle Activity screen showing shared care events" /></div>
+        </div>
+      </div>
+    </section>
+
+    <div class="shell trust-strip" aria-label="Verified MVP capabilities">
+      <div class="trust-item"><span class="trust-icon">✓</span><div><strong>Two connected roles</strong><span>Parent and caregiver access</span></div></div>
+      <div class="trust-item"><span class="trust-icon">✉</span><div><strong>Real invitations</strong><span>Email verification and acceptance</span></div></div>
+      <div class="trust-item"><span class="trust-icon">●</span><div><strong>Live coordination</strong><span>Shared updates and notifications</span></div></div>
+    </div>
+
+    <section class="section alt" id="how-it-works">
+      <div class="shell">
+        <div class="section-heading">
+          <p class="eyebrow">How it works</p>
+          <h2>One shared rhythm from setup to progress.</h2>
+          <p>The workflow stays simple for families while preserving clear roles and privacy boundaries.</p>
+        </div>
+        <div class="flow-grid">
+          <article class="flow-card"><span class="step-number">1</span><h3>Parent creates the circle</h3><p>The parent sets up the child’s private care space, measurable goals, interventions, and recurring daily-care items.</p></article>
+          <article class="flow-card"><span class="step-number">2</span><h3>Caregiver joins safely</h3><p>A caregiver uses the invitation email, verifies the matching address, and accepts only the access the parent granted.</p></article>
+          <article class="flow-card"><span class="step-number">3</span><h3>Everyone stays coordinated</h3><p>Members complete care, record structured outcomes, exchange handoffs, and receive privacy-safe activity notifications.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="roles">
+      <div class="shell">
+        <div class="section-heading">
+          <p class="eyebrow">Role boundaries</p>
+          <h2>The right people see the right things.</h2>
+          <p>Parents retain control. Caregivers can collaborate fully in the day-to-day workflow without changing the parent-managed care plan.</p>
+        </div>
+        <div class="role-grid">
+          <article class="role-card">
+            <div class="role-card-header"><h3>Parent</h3><span class="pill">Full access</span></div>
+            <ul><li>Create the private care circle</li><li>Manage goals and interventions</li><li>Set recurring daily-care templates</li><li>Invite and manage caregivers</li><li>Review all progress, updates, and activity</li></ul>
+          </article>
+          <article class="role-card caregiver">
+            <div class="role-card-header"><h3>Caregiver</h3><span class="pill">Daily care</span></div>
+            <ul><li>View assigned daily care</li><li>Complete items with clear attribution</li><li>Follow shared interventions</li><li>Record structured progress outcomes</li><li>Post handoffs, replies, and community support</li></ul>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section alt" aria-label="CareCircle feature walkthrough">
+      <div class="shell feature-stack">
+        <article class="feature">
+          <div class="feature-copy"><p class="eyebrow">Daily care</p><h3>Care tasks that persist and stay accountable.</h3><p>Parents create recurring items; caregivers complete them. Every action records who helped and when.</p><ul><li>Daily and weekday schedules</li><li>Complete and undo support</li><li>Real-time parent and caregiver sync</li></ul></div>
+          <figure class="feature-shot"><img src="assets/today.webp" alt="Today screen with two completed morning care tasks" /><figcaption>Today keeps the circle aligned around the practical work that needs attention now.</figcaption></figure>
+        </article>
+        <article class="feature">
+          <div class="feature-copy"><p class="eyebrow">Shared progress</p><h3>Checklist completion and goal outcomes stay distinct.</h3><p>CareCircle separates “what was done” from “how independently the goal was achieved,” making progress more meaningful.</p><ul><li>Structured outcomes</li><li>Weekly targets and observations</li><li>History with author and time</li></ul></div>
+          <figure class="feature-shot"><img src="assets/progress.webp" alt="Progress screen showing a recorded weekly goal outcome" /><figcaption>Goal progress uses intentional outcome records rather than guessing from checklist activity.</figcaption></figure>
+        </article>
+        <article class="feature">
+          <div class="feature-copy"><p class="eyebrow">Trusted access</p><h3>Caregivers join the existing circle by invitation.</h3><p>The verified invited email is matched to the correct care circle. A caregiver does not create a second parent workspace.</p><ul><li>Seven-day invitation window</li><li>Email verification before access</li><li>Read-only parent-managed care plan</li></ul></div>
+          <figure class="feature-shot"><img src="assets/invite.webp" alt="Caregiver invitation acceptance screen" /><figcaption>The invitation clearly identifies the child’s circle and the caregiver relationship being granted.</figcaption></figure>
+        </article>
+        <article class="feature">
+          <div class="feature-copy"><p class="eyebrow">Privacy-safe coordination</p><h3>Shared updates without losing context in group texts.</h3><p>Requests, replies, activity history, and optional web push help the circle respond quickly while keeping lock-screen text generic.</p><ul><li>Updates and open requests</li><li>Shared activity timeline</li><li>Optional private push notifications</li></ul></div>
+          <figure class="feature-shot"><img src="assets/caregiver.webp" alt="Caregiver read-only view of the shared care plan" /><figcaption>Caregiver controls are focused on daily support; parent-only editing actions remain unavailable.</figcaption></figure>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" id="review">
+      <div class="shell review-box">
+        <p class="eyebrow">10-minute acceptance review</p>
+        <h2>What to check before approval.</h2>
+        <p>Use the MVP naturally, then confirm whether these core experiences match the intended CareCircle product.</p>
+        <div class="checklist">
+          <div class="check"><span>1</span>Parent onboarding feels clear</div>
+          <div class="check"><span>2</span>Goals and interventions are practical</div>
+          <div class="check"><span>3</span>Daily care is easy to complete</div>
+          <div class="check"><span>4</span>Weekly progress is understandable</div>
+          <div class="check"><span>5</span>Invitations and role limits feel safe</div>
+          <div class="check"><span>6</span>Updates and activity keep everyone informed</div>
+          <div class="check"><span>7</span>Community feels useful and respectful</div>
+          <div class="check"><span>8</span>The overall MVP is ready to approve</div>
+        </div>
+        <div class="actions">
+          <a class="button" href="https://carecircle-app-live--client-test-final-z6zu32v7.web.app" target="_blank" rel="noreferrer">Start the MVP review ↗</a>
+          <a class="button secondary" href="#top">Back to top</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="shell footer-inner"><strong>CareCircle MVP</strong><span>Private client review guide · Prepared by Eureka Tech</span></div>
+  </footer>
+</body>
+</html>

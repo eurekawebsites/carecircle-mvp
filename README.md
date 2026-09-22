@@ -4,7 +4,7 @@ A controlled, multi-role demo of **CareCircle**: one private place for parents a
 trusted caregivers to coordinate a child's daily care, follow the same interventions,
 and see progress over time.
 
-**Live demo:** https://eurekawebsites.github.io/carecircle-mvp/
+**Live demo:** https://carecircle-mvp.web.app/
 
 ---
 
@@ -78,12 +78,9 @@ npm run preview     # serve the built site locally
 
 ## Deployment
 
-Pushing to `main` runs [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml),
-which builds the site and publishes `dist/` to GitHub Pages.
+Primary public hosting is **Firebase Hosting** at https://carecircle-mvp.web.app/.
 
-The Vite `base` is set to `/carecircle-mvp/` in [`vite.config.ts`](vite.config.ts) so
-assets and the favicon resolve correctly under the project Pages URL. If the
-repository or Pages path changes, update `base` to match.
+The Firebase workflow builds specifically for the domain root using `--base=/` and deploys `dist/`. The existing GitHub Pages workflow and the `/carecircle-mvp/` Vite base remain in place temporarily as a rollback fallback during migration.
 
 ---
 

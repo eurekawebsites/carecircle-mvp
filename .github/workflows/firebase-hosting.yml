@@ -1,0 +1,31 @@
+name: Deploy carecircle-mvp to Firebase Hosting
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build for Firebase root hosting
+        run: npm run build -- --base=/
+
+      - name: Deploy to Firebase Hosting
+        uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: ${{ secrets.GITHUB_TOKEN }}
+          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_CARECIRCLE_MVP }}
+          projectId: ${{ secrets.FIREBASE_PROJECT_ID_CARECIRCLE_MVP }}
+          channelId: live
